@@ -77,12 +77,12 @@ Sample test output:
 
 > Fill in once you've implemented scheduling logic.
 
-| Feature | Method(s) | Notes |
-|---------|-----------|-------|
-| Task sorting | | e.g., by priority, duration |
-| Filtering | | e.g., skip tasks if time runs out |
-| Conflict handling | | e.g., overlapping time slots |
-| Recurring tasks | | e.g., daily vs. weekly |
+| Feature          | Method(s)                                                         | Notes                                                                                                                                                             |
+| --------------------- | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Task sorting      | `Scheduler.sort_by_time()` and `Scheduler.sort_tasks()`                 | `sort_by_time()` sorts tasks chronologically by their scheduled time. `sort_tasks()` sorts by priority for the daily plan.                                             |
+| Filtering         | `Scheduler.filter_by()` and `Scheduler.filter_tasks()`                  | `filter_by()` filters tasks by pet name and/or completion status. `filter_tasks()` removes completed tasks and keeps tasks that fit within the owner's available time. |
+| Conflict handling | `Scheduler.detect_conflicts()`                                          | Detects overlapping task times on the same due date and returns warning messages instead of stopping the program.                                                      |
+| Recurring tasks   | `Task.mark_complete()`, `Task.next_occurrence()`, `Pet.complete_task()` | Automatically creates the next daily or weekly task using `timedelta` when a recurring task is completed.                                                              |
 
 ## 📸 Demo Walkthrough
 

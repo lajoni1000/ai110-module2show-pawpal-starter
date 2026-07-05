@@ -47,8 +47,11 @@ Yes, I made a few small changes after reviewing my UML with the AI coding assist
 
 **b. Tradeoffs**
 
-- Describe one tradeoff your scheduler makes.
-- Why is that tradeoff reasonable for this scenario?
+My scheduler detects conflicts by comparing every pair of tasks to see if their scheduled times overlap. This approach is simple and easy to understand, but it becomes less efficient as the number of tasks increases because every task must be compared with every other task.
+
+Why this is reasonable? PawPal+ is designed for pet owners who typically manage only a small number of daily tasks. For this type of application, readability and maintainability are more important than optimizing for very large schedules, so the simpler algorithm is a good tradeoff.
+
+I decided to accept the AI suggestion to use itertools.combinations(entries, 2). Even though this is a more Pythonic approach, I found it easier to read than the original nested index loop because it clearly communicates that the algorithm is comparing every pair of tasks. I rejected more advanced optimization ideas because they would make the code harder to understand for this project.
 
 ---
 
