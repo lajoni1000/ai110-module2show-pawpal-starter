@@ -1,7 +1,7 @@
 """PawPal+ core domain classes.
 
-Class skeletons generated from diagrams/uml_draft.mmd.
-Business logic is intentionally left unimplemented (method stubs only).
+Implemented from diagrams/uml_draft.mmd.
+Task and Pet are dataclasses; Owner and Scheduler are behavior-oriented classes.
 """
 
 from __future__ import annotations
@@ -21,7 +21,7 @@ class Task:
 
     def mark_complete(self) -> None:
         """Mark this task as completed."""
-        pass
+        self.completed = True
 
 
 @dataclass
@@ -35,15 +35,16 @@ class Pet:
 
     def add_task(self, task: Task) -> None:
         """Add a task to this pet's task list."""
-        pass
+        self.tasks.append(task)
 
     def remove_task(self, task: Task) -> None:
-        """Remove a task from this pet's task list."""
-        pass
+        """Remove a task from this pet's task list (no error if absent)."""
+        if task in self.tasks:
+            self.tasks.remove(task)
 
     def get_tasks(self) -> list[Task]:
         """Return all tasks for this pet."""
-        pass
+        return self.tasks
 
 
 class Owner:
@@ -64,11 +65,14 @@ class Owner:
 
     def add_pet(self, pet: Pet) -> None:
         """Add a pet to this owner's list of pets."""
-        pass
+        self.pets.append(pet)
 
     def get_all_tasks(self) -> list[Task]:
-        """Return all tasks across every pet this owner has."""
-        pass
+        """Return a flat list of every task across all of this owner's pets."""
+        all_tasks: list[Task] = []
+        for pet in self.pets:
+            all_tasks.extend(pet.get_tasks())
+        return all_tasks
 
 
 class Scheduler:
@@ -79,13 +83,31 @@ class Scheduler:
         self.owner = owner
 
     def generate_daily_plan(self) -> list[Task]:
-        """Produce an ordered daily plan of tasks based on constraints."""
-        pass
+        """Produce an ordered daily plan of tasks that fits the owner's time.
+
+        Gathers every pet's tasks, sorts them by priority, then keeps only
+        the tasks that fit within the owner's available time.
+        """
+        tasks = self.owner.get_all_tasks()
+        sorted_tasks = self.sort_tasks(tasks)
+        return self.filter_tasks(sorted_tasks)
 
     def sort_tasks(self, tasks: list[Task]) -> list[Task]:
         """Return tasks sorted by priority (lower number = higher priority)."""
-        pass
+        return sorted(tasks, key=lambda task: task.priority)
 
     def filter_tasks(self, tasks: list[Task]) -> list[Task]:
-        """Return only the tasks that fit the owner's available time."""
-        pass
+        """Return the incomplete tasks that fit the owner's available time.
+
+        Iterates in the given order and greedily adds tasks while the running
+        total stays within ``owner.available_time``. Completed tasks are skipped.
+        """
+        plan: list[Task] = []
+        time_used = 0
+        for task in tasks:
+            if task.completed:
+                continue
+            if time_used + task.duration <= self.owner.available_time:
+                plan.append(task)
+                time_used += task.duration
+        return plan
