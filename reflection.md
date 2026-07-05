@@ -2,15 +2,39 @@
 
 ## 1. System Design
 
+### Core User Actions
+
+1. Add and manage pets with their basic information.
+2. Create and manage pet care tasks such as feeding, walking, medication, and grooming.
+3. Generate and view a daily schedule based on task priorities and available time.
+
+### Building Blocks
+
+Owner
+- Attributes: name, available_time, preferences, pets
+- Methods: add_pet(), get_all_tasks()
+
+Pet
+- Attributes: name, species, age, tasks
+- Methods: add_task(), remove_task(), get_tasks()
+
+Task
+- Attributes: description, duration, priority, task_type, completed
+- Methods: mark_complete()
+
+Scheduler
+- Attributes: owner
+- Methods: generate_daily_plan(), sort_tasks(), filter_tasks()
+
 **a. Initial design**
 
-- Briefly describe your initial UML design.
-- What classes did you include, and what responsibilities did you assign to each?
+My initial UML design included four main classes: Owner, Pet, Task, and Scheduler. I designed the system so that each class has a clear responsibility. The Owner class represents the person using the app and stores information about their pets, available time, and preferences. The Pet class stores basic information about each pet and the tasks assigned to it. The Task class represents individual pet care activities, such as feeding, walking, medication, or grooming, along with details like duration, priority, and completion status. Finally, the Scheduler class is responsible for organizing tasks and generating a daily care plan based on priorities and the owner's constraints.
+
+
 
 **b. Design changes**
 
-- Did your design change during implementation?
-- If yes, describe at least one change and why you made it.
+Yes, I made a few small changes after reviewing my UML with the AI coding assistant. I changed the Task priority attribute from a string to an integer because it will make sorting tasks by priority easier later in the project. I also kept Task and Pet as dataclasses while leaving Owner and Scheduler as regular classes, since they are more focused on managing relationships and behavior than simply storing data. Finally, I used `field(default_factory=list)` for list attributes to avoid issues with mutable default values.
 
 ---
 
