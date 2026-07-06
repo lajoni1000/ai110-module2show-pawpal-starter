@@ -59,19 +59,40 @@ Today's PawPal+ Schedule
 
 ## 🧪 Testing PawPal+
 
-```bash
-# Run the full test suite:
-pytest
+Run the automated test suite with:
 
-# Run with coverage:
-pytest --cov
+```bash
+python -m pytest
 ```
+
+The test suite verifies:
+
+- Task creation and completion
+- Adding and removing tasks from pets
+- Sorting tasks by priority and scheduled time
+- Filtering tasks by pet name and completion status
+- Automatic creation of recurring daily and weekly tasks
+- Conflict detection for overlapping task schedules
+- Daily schedule generation
+- Edge cases such as invalid time formats and exact time limits
 
 Sample test output:
 
-```
-# Paste your pytest output here
-```
+(.venv) PS C:\Users\hanny\OneDrive\Documentos\Foundations of AI Engineering\ai110-module2show-pawpal-starter> python -m pytest
+=========================================================== test session starts ===========================================================
+platform win32 -- Python 3.13.13, pytest-9.0.3, pluggy-1.6.0
+rootdir: C:\Users\hanny\OneDrive\Documentos\Foundations of AI Engineering\ai110-module2show-pawpal-starter
+plugins: anyio-4.13.0
+collected 21 items                                                                                                                         
+
+tests\test_pawpal.py .....................                                                                                           [100%]
+
+=========================================================== 21 passed in 0.14s ============================================================
+
+**Confidence Level:** ⭐⭐⭐⭐⭐ (5/5)
+
+All automated tests passed successfully. The test suite verifies the main scheduling features, including sorting, filtering, recurring tasks, and conflict detection, giving me high confidence that the system works correctly for the expected use cases.
+
 
 ## 📐 Smarter Scheduling
 
