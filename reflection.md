@@ -36,14 +36,20 @@ My initial UML design included four main classes: Owner, Pet, Task, and Schedule
 
 Yes, I made a few small changes after reviewing my UML with the AI coding assistant. I changed the Task priority attribute from a string to an integer because it will make sorting tasks by priority easier later in the project. I also kept Task and Pet as dataclasses while leaving Owner and Scheduler as regular classes, since they are more focused on managing relationships and behavior than simply storing data. Finally, I used `field(default_factory=list)` for list attributes to avoid issues with mutable default values.
 
+**b. Design changes**
+
+Yes, I made several changes after reviewing my UML with the AI coding assistant and implementing the project. I changed the `Task` priority attribute from a string to an integer because it makes sorting tasks by priority easier. I also kept `Task` and `Pet` as dataclasses while leaving `Owner` and `Scheduler` as regular classes since they focus more on behavior than data storage.
+
+As the project evolved, I expanded the design by adding scheduling features such as task time, recurrence, and due dates. I also added new methods like `sort_by_time()`, `filter_by()`, `detect_conflicts()`, `next_occurrence()`, and `complete_task()` to support smarter scheduling, recurring tasks, and conflict detection. These changes made the final system more capable while keeping each class responsible for a specific part of the application.
 ---
 
 ## 2. Scheduling Logic and Tradeoffs
 
 **a. Constraints and priorities**
 
-- What constraints does your scheduler consider (for example: time, priority, preferences)?
-- How did you decide which constraints mattered most?
+My scheduler considers several constraints when creating a daily plan, including task priority, the owner's available time, task completion status, scheduled time, and recurring tasks. It also checks for overlapping task times to warn the user about possible scheduling conflicts.
+
+I decided that priority and available time were the most important constraints because they help ensure that the most important pet care tasks are completed first while keeping the schedule realistic for the owner's available time.
 
 **b. Tradeoffs**
 
@@ -59,13 +65,15 @@ I decided to accept the AI suggestion to use itertools.combinations(entries, 2).
 
 **a. How you used AI**
 
-- How did you use AI tools during this project (for example: design brainstorming, debugging, refactoring)?
-- What kinds of prompts or questions were most helpful?
+I used AI throughout the project to brainstorm the initial system design, generate the UML diagram, implement object-oriented classes, improve scheduling algorithms, write docstrings, and create automated tests. I also used AI to review my code and suggest improvements for readability.
+
+The most helpful prompts were specific questions about one method at a time, such as asking how to simplify my conflict detection algorithm or how to write pytest tests for sorting, recurring tasks, and conflict detection.
 
 **b. Judgment and verification**
 
-- Describe one moment where you did not accept an AI suggestion as-is.
-- How did you evaluate or verify what the AI suggested?
+One suggestion I did not immediately accept was an AI recommendation to optimize the conflict detection algorithm. Instead of making the algorithm more complex, I chose a simpler approach using `itertools.combinations()` because it improved readability without changing the behavior.
+
+I verified every important change by running both the Streamlit application and the automated test suite with `python -m pytest`. I only accepted AI suggestions after confirming they worked correctly.
 
 ---
 
@@ -73,13 +81,15 @@ I decided to accept the AI suggestion to use itertools.combinations(entries, 2).
 
 **a. What you tested**
 
-- What behaviors did you test?
-- Why were these tests important?
+I tested task creation, task completion, adding and removing tasks from pets, sorting by priority and scheduled time, filtering by pet and completion status, recurring daily and weekly tasks, conflict detection, and daily schedule generation.
+
+These tests were important because they verified that the core scheduling logic behaved correctly and that the algorithms continued to work after making changes.
 
 **b. Confidence**
 
-- How confident are you that your scheduler works correctly?
-- What edge cases would you test next if you had more time?
+I am very confident that my scheduler works correctly because all 21 automated tests passed successfully. The tests cover the main scheduling features and several edge cases.
+
+If I had more time, I would add tests for more complex recurring schedules, multiple overlapping conflicts, editing existing tasks, and additional invalid user inputs.
 
 ---
 
@@ -87,12 +97,12 @@ I decided to accept the AI suggestion to use itertools.combinations(entries, 2).
 
 **a. What went well**
 
-- What part of this project are you most satisfied with?
+I am most satisfied with how the scheduling system became more intelligent throughout the project. Starting from simple classes, I successfully implemented sorting, filtering, recurring tasks, conflict detection, automated tests, and a Streamlit interface that demonstrates these features.
 
 **b. What you would improve**
 
-- If you had another iteration, what would you improve or redesign?
+If I had another iteration, I would improve the Streamlit interface by allowing users to edit or delete existing tasks, mark tasks as completed directly from the UI, and automatically refresh recurring tasks after completion. I would also improve the visual presentation of the schedule.
 
 **c. Key takeaway**
 
-- What is one important thing you learned about designing systems or working with AI on this project?
+The most important lesson I learned is that AI is a powerful engineering partner, but not a replacement for my own judgment. The best results came from asking focused questions, reviewing every suggestion, testing the code, and deciding which solutions best matched my design goals. Throughout this project, I learned that my role is to be the lead architect, using AI as a tool to improve my work while remaining responsible for the final design and implementation.

@@ -22,6 +22,20 @@ Your final app should:
 - Display the plan clearly (and ideally explain the reasoning)
 - Include tests for the most important scheduling behaviors
 
+## ✨ Features
+
+PawPal+ uses object-oriented programming and scheduling algorithms to help pet owners organize daily care tasks.
+
+- Manage multiple pets under one owner.
+- Add pet care tasks with duration, priority, scheduled time, and recurrence.
+- Sort tasks chronologically using `Scheduler.sort_by_time()`.
+- Generate a daily schedule based on priority and the owner's available time.
+- Filter tasks by pet name or completion status.
+- Detect overlapping task schedules and display warning messages.
+- Automatically create recurring daily and weekly tasks.
+- Display schedules and conflict warnings in the Streamlit interface.
+
+
 ## Getting started
 
 ### Setup
@@ -109,10 +123,27 @@ All automated tests passed successfully. The test suite verifies the main schedu
 
 Describe your app in numbered steps so a reader can follow along without watching a video:
 
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
+## 📸 Demo Walkthrough
 
+1. Launch the Streamlit application.
+2. Enter the owner's name and available time for the day.
+3. Add one or more pets.
+4. Create pet care tasks by entering the task description, duration, priority, scheduled time, and recurrence.
+5. Click **Generate Schedule** to create the daily plan.
+6. View the generated schedule in the table, ordered by priority or by time.
+7. If two tasks overlap, PawPal+ displays warning messages so the owner can adjust the schedule.
+8. Review the total scheduled time and remaining available time for the day.
+
+### Sample CLI Output
+
+```text
+Today's PawPal+ Schedule
+============================================
+  1. Morning walk          30 min  [High]    walk
+  2. Feeding               10 min  [High]    feeding
+  3. Medication            15 min  [Medium]  medication
+--------------------------------------------
+  Total: 55 of 60 min used (5 min free)
+============================================
+```
 **Screenshot or video** *(optional)*: <!-- Insert a screenshot or link to a demo video here -->

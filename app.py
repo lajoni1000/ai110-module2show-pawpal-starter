@@ -1,3 +1,5 @@
+from datetime import time
+
 import streamlit as st
 from pawpal_system import Owner, Pet, Task, Scheduler
 st.set_page_config(page_title="PawPal+", page_icon="🐾", layout="centered")
@@ -81,15 +83,21 @@ else:
     selected_name = st.selectbox("Assign task to", pet_names)
     selected_pet = owner.pets[pet_names.index(selected_name)]
 
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3 = st.columns(3)
     with col1:
         task_title = st.text_input("Task title", value="Morning walk")
     with col2:
         duration = st.number_input("Duration (minutes)", min_value=1, max_value=240, value=20)
     with col3:
-        priority = st.selectbox("Priority", ["low", "medium", "high"], index=2)
-    with col4:
         task_type = st.text_input("Type", value="walk")
+
+    col4, col5 = st.columns(2)
+    with col4:
+        priority = st.selectbox("Priority", ["low", "medium", "high"], index=2)
+    with col5:
+        # Start time drives conflict detection: Scheduler.detect_conflicts() flags
+        # tasks whose [start, start + duration) windows overlap on the same day.
+        start_time = st.time_input("Start time", value=time(9, 0))
 
     if st.button("Add task"):
         selected_pet.add_task(
@@ -98,6 +106,7 @@ else:
                 duration=int(duration),
                 priority=PRIORITY_MAP[priority],
                 task_type=task_type,
+                time=start_time.strftime("%H:%M"),
             )
         )
         st.success(f"Added '{task_title}' to {selected_pet.name}.")
@@ -112,6 +121,7 @@ else:
                     {
                         "Task": t.description,
                         "Type": t.task_type,
+                        "Time": t.time,
                         "Duration (min)": t.duration,
                         "Priority": PRIORITY_LABELS.get(t.priority, t.priority),
                         "Done": t.completed,
@@ -124,12 +134,24 @@ st.divider()
 
 st.subheader("Build Schedule")
 
+# Let the owner choose how the plan is ordered. "Time of day" uses the
+# Scheduler.sort_by_time() method so the plan reads like a real daily timeline;
+# "Priority" keeps the generate_daily_plan() order (most important first).
+order_by = st.radio(
+    "Order the plan by",
+    ["Priority", "Time of day"],
+    horizontal=True,
+)
+
 if st.button("Generate schedule"):
     if not owner.pets:
         st.warning("Add a pet and some tasks first.")
     else:
         scheduler = Scheduler(owner)
         plan = scheduler.generate_daily_plan()
+
+        if order_by == "Time of day":
+            plan = scheduler.sort_by_time(plan)
 
         if not plan:
             st.info("No tasks fit within the available time.")
@@ -141,6 +163,7 @@ if st.button("Generate schedule"):
                         "#": i,
                         "Task": t.description,
                         "Type": t.task_type,
+                        "Time": t.time,
                         "Duration (min)": t.duration,
                         "Priority": PRIORITY_LABELS.get(t.priority, t.priority),
                     }
@@ -152,3 +175,18 @@ if st.button("Generate schedule"):
                 f"Total: {total} of {owner.available_time} min used "
                 f"({owner.available_time - total} min free)"
             )
+
+        # Surface the algorithmic conflict check. A time overlap is a "careful"
+        # signal, not a failure — so it's an st.warning, not st.error. When
+        # there are none, say so explicitly instead of leaving the owner guessing.
+        conflicts = scheduler.detect_conflicts()
+        st.write("### Schedule Check")
+        if conflicts:
+            st.warning(
+                f"Found {len(conflicts)} scheduling conflict(s). "
+                "These tasks overlap in time — you may need help or a reschedule:"
+            )
+            for message in conflicts:
+                st.warning(message)
+        else:
+            st.success("No scheduling conflicts — everything fits without overlaps. 🎉")
